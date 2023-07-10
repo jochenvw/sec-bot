@@ -16,6 +16,22 @@ resource sqlServer 'Microsoft.Sql/servers@2021-02-01-preview' = {
     administratorLogin: adminUsername
     administratorLoginPassword: adminPassword
     version: '12.0'
+    publicNetworkAccess: 'Disabled'
+    threatDetectionPolicies: {
+      defaultPolicy: {
+        state: 'Enabled'
+      }
+    }
+  }
+}
+
+resource sqlDatabase 'Microsoft.Sql/servers/databases@2021-02-01-preview' = {
+  name: '${sqlServer.name}/databaseName'
+  properties: {
+    collation: 'SQL_Latin1_General_CP1_CI_AS'
+    transparentDataEncryption: {
+      status: 'Enabled'
+    }
   }
 }
 
