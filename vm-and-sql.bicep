@@ -2,7 +2,7 @@ param sqlServerName string = 'mySqlServer'
 param adminUsername string = 'adminUser'
 param adminPassword securestring = secure('adminPassword')
 param vmName string = 'myVM'
-param vmSize string = 'Standard_DS2_v2'
+param vmSize string = 'Standard_D4_v5'
 
 var sqlDatabaseName = 'myDatabase'
 var sqlUsername = 'myUsername'
@@ -17,6 +17,12 @@ resource sqlServer 'Microsoft.Sql/servers@2020-02-02-preview' = {
   properties: {
     administratorLogin: sqlUsername
     administratorLoginPassword: sqlPassword
+    sku: {
+      name: 'GP_S_Gen5_2'
+      tier: 'GeneralPurpose'
+      capacity: 2
+      family: 'Gen5'
+    }
   }
 }
 
@@ -65,6 +71,10 @@ resource virtualMachine 'Microsoft.Compute/virtualMachines@2021-03-01' = {
           id: nic.id
         }
       ]
+    }
+    autoShutdownProfile: {
+      enabled: true
+      stopVMGracePeriod: 'PT2H' // Adjust the desired grace period as needed
     }
   }
 }
